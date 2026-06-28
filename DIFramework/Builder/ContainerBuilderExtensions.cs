@@ -45,12 +45,36 @@ namespace DIFramework.Builder
             Type @serviceInterface,
             Type serviceImplementation)
             => builder.RegisterType(serviceInterface, serviceImplementation, Lifetime.Singleton);
+        
+        public static IContainerBuilder RegisterSingletonFor(this IContainerBuilder builder, Type implementation, params Type[] serviceTypes)
+        {
+            if (implementation == null) throw new ArgumentNullException(nameof(implementation));
+            if (serviceTypes == null || serviceTypes.Length == 0)
+                throw new ArgumentException("At least one service type must be provided", nameof(serviceTypes));
+    
+            foreach (var service in serviceTypes)
+                builder.RegisterType(service, implementation, Lifetime.Singleton);
+    
+            return builder;
+        }
     
         public static IContainerBuilder RegisterTransient(
             this IContainerBuilder builder,
             Type @serviceInterface,
             Type serviceImplementation)
             => builder.RegisterType(serviceInterface, serviceImplementation, Lifetime.Transient);
+        
+        public static IContainerBuilder RegisterTransientFor(this IContainerBuilder builder, Type implementation, params Type[] serviceTypes)
+        {
+            if (implementation == null) throw new ArgumentNullException(nameof(implementation));
+            if (serviceTypes == null || serviceTypes.Length == 0)
+                throw new ArgumentException("At least one service type must be provided", nameof(serviceTypes));
+    
+            foreach (var service in serviceTypes)
+                builder.RegisterType(service, implementation, Lifetime.Transient);
+    
+            return builder;
+        }
         
         public static IContainerBuilder RegisterScoped(
             this IContainerBuilder builder,
@@ -77,31 +101,11 @@ namespace DIFramework.Builder
         public static IContainerBuilder RegisterSingleton<TImplementation>(this IContainerBuilder builder)
             => builder.RegisterType(typeof(TImplementation), typeof(TImplementation), Lifetime.Singleton);
     
-        #endregion
-    
-        #region ByFunc
+        public static IContainerBuilder RegisterSingletonFor<TImplementation>(this IContainerBuilder builder, params Type[] serviceTypes)
+            => builder.RegisterSingletonFor(typeof(TImplementation), serviceTypes);
         
-        public static IContainerBuilder RegisterSingleton(this IContainerBuilder builder, Type type, Func<IScope, object> function)
-            => builder.RegisterFactory(type, function, Lifetime.Singleton);
-    
-        public static IContainerBuilder RegisterTransient(this IContainerBuilder builder, Type type, Func<IScope, object> function)
-            => builder.RegisterFactory(type, function, Lifetime.Transient);
-        
-        public static IContainerBuilder RegisterScoped(this IContainerBuilder builder, Type type, Func<IScope, object> function)
-            => builder.RegisterFactory(type, function, Lifetime.Scoped);
-    
-        #endregion
-        
-        #region ByFuncGeneric
-        
-        public static IContainerBuilder RegisterSingleton<T>(this IContainerBuilder builder, Func<IScope, object> function)
-            => builder.RegisterFactory(typeof(T), function, Lifetime.Singleton);
-    
-        public static IContainerBuilder RegisterTransient<T>(this IContainerBuilder builder, Func<IScope, object> function)
-            => builder.RegisterFactory(typeof(T), function, Lifetime.Transient);
-        
-        public static IContainerBuilder RegisterScoped<T>(this IContainerBuilder builder, Func<IScope, object> function)
-            => builder.RegisterFactory(typeof(T), function, Lifetime.Scoped);
+        public static IContainerBuilder RegisterTransientFor<TImplementation>(this IContainerBuilder builder, params Type[] serviceTypes)
+            => builder.RegisterTransientFor(typeof(TImplementation), serviceTypes);
     
         #endregion
         
@@ -127,21 +131,6 @@ namespace DIFramework.Builder
     
             return builder;
         }
-    
-        public static IContainerBuilder RegisterSingletonFor(this IContainerBuilder builder, Type implementation, params Type[] serviceTypes)
-        {
-            if (implementation == null) throw new ArgumentNullException(nameof(implementation));
-            if (serviceTypes == null || serviceTypes.Length == 0)
-                throw new ArgumentException("At least one service type must be provided", nameof(serviceTypes));
-    
-            foreach (var service in serviceTypes)
-                builder.RegisterType(service, implementation, Lifetime.Singleton);
-    
-            return builder;
-        }
-    
-        public static IContainerBuilder RegisterSingletonFor<TImplementation>(this IContainerBuilder builder, params Type[] serviceTypes)
-            => builder.RegisterSingletonFor(typeof(TImplementation), serviceTypes);
     
         #endregion
     }
