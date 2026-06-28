@@ -209,7 +209,14 @@ namespace DIFramework.Container
             var argsForConstructor = new object[parameters.Length];
             for (int i = 0; i < parameters.Length; i++)
             {
-                argsForConstructor[i] = CreateInstance(parameters[i].ParameterType, scope);
+                if (parameters[i].ParameterType is IScope)
+                {
+                    argsForConstructor[i] = scope;
+                }
+                else
+                {
+                    argsForConstructor[i] = CreateInstance(parameters[i].ParameterType, scope);
+                }
             }
 
             return constructor.Invoke(argsForConstructor);
