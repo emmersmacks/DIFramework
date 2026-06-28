@@ -90,7 +90,12 @@ namespace DIFramework.Container
                             // type-based descriptor lifetimes
                             if (td.Lifetime == Data.Lifetime.Singleton)
                             {
-                                if (!_singletonInstances.TryGetValue(td, out inst))
+                                inst = _singletonInstances
+                                    .Where(p => p.Key is TypeBasedServiceDescriptor d &&
+                                                d.ImplementationType == impl)
+                                    .Select(p => p.Value)
+                                    .FirstOrDefault();
+                                if (inst == null)
                                 {
                                     inst = CreateByType(impl, scope);
                                     _singletonInstances[td] = inst;
