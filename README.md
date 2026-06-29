@@ -8,7 +8,7 @@ Implementation of a Dependency Injection (DI) framework for educational purposes
 Installing as a unity module via a git link in the PackageManager or editing `Packages/manifest.json`:
 
 ```
-"com.separate.di": "https://github.com/emmersmacks/DIFramework.git",
+"com.cascade.di": "https://github.com/emmersmacks/CascadeDI.git",
 ```
 
 ### Usage
