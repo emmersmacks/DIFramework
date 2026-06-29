@@ -4,6 +4,6 @@ namespace DIFramework
 {
     public interface IScope 
     {
-        object Resolve(Type service, bool includeParent = true);
+        object Resolve(Type service, bool collectParentDescriptors = true);
     }
 }
